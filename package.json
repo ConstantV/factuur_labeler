@@ -1,0 +1,22 @@
+{
+  "name": "factuur-labeler",
+  "version": "1.0.0",
+  "description": "Gmail tool that finds invoice emails and applies the 'factuur' label",
+  "type": "module",
+  "bin": {
+    "factuur-labeler": "./factuur-labeler.ts"
+  },
+  "scripts": {
+    "help": "bun run factuur-labeler.ts --help",
+    "auth": "bun run factuur-labeler.ts auth",
+    "scan": "bun run factuur-labeler.ts scan",
+    "dry-run": "bun run factuur-labeler.ts scan --dry-run",
+    "status": "bun run factuur-labeler.ts status"
+  },
+  "keywords": ["gmail", "factuur", "invoice", "label", "email"],
+  "author": "constantverweij",
+  "license": "MIT",
+  "dependencies": {
+    "googleapis": "^144.0.0"
+  }
+}

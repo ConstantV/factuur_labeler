@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment & credentials
+.env
+*.json.secret
+token.json
+credentials.json
+oauth2.keys.json
+
+# macOS
+.DS_Store
+
+# Build output
+dist/
+build/
+
+# Bun
+.bun/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
