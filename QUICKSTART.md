@@ -1,48 +1,100 @@
 # factuur-labeler Quick Start
 
-## Step 1 — Install dependencies
+## Stap 1 — Dependencies installeren
 
 ```bash
 cd factuur-labeler
 bun install
+bun add puppeteer
 ```
 
-## Step 2 — Google Cloud setup (one time)
+**Op Linux VM (headless):** installeer ook Chrome:
+```bash
+bunx puppeteer browsers install chrome
+```
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project (or select an existing one)
-3. Go to **APIs & Services → Library** → search "Gmail API" → Enable it
-4. Go to **APIs & Services → Credentials** → Create Credentials → OAuth 2.0 Client ID
-5. Application type: **Desktop app**
-6. Download the JSON → save as `~/.config/factuur-labeler/credentials.json`
+## Stap 2 — Google Cloud instellen (eenmalig)
 
-> Or set env vars: `GMAIL_CLIENT_ID` + `GMAIL_CLIENT_SECRET`
+1. Ga naar [Google Cloud Console](https://console.cloud.google.com/)
+2. Maak een project aan (of selecteer bestaand)
+3. **APIs & Services → Library** → zoek "Gmail API" → Enable
+4. **APIs & Services → Credentials** → Create Credentials → OAuth 2.0 Client ID
+5. Applicatietype: **Desktop app**
+6. Download JSON → sla op als `~/.config/factuur-labeler/credentials.json`
 
-## Step 3 — Authenticate
+> Of stel env vars in: `GMAIL_CLIENT_ID` + `GMAIL_CLIENT_SECRET`
+
+## Stap 3 — Authenticeren
 
 ```bash
 bun run factuur-labeler.ts auth
 ```
 
-Your browser opens. Approve Gmail access. Done.
+Browser opent automatisch. Keur Gmail-toegang goed. Klaar.
 
-## Step 4 — Preview (dry run)
+> **Linux VM:** voer dit eenmalig uit op je Mac, kopieer daarna
+> `~/.config/factuur-labeler/tokens.json` naar de VM.
+
+## Stap 4 — Config instellen
 
 ```bash
-bun run factuur-labeler.ts scan --dry-run
+bun run factuur-labeler.ts config
 ```
 
-See which emails would be labeled — no changes made.
+Pas `~/.config/factuur-labeler/config.json` aan:
 
-## Step 5 — Label invoices
+```json
+{
+  "output_base": "/pad/naar/Facturen_IN",
+  "trusted_domains": [
+    "apple.com",
+    "google.com",
+    "jouwleverancier.nl"
+  ]
+}
+```
+
+## Stap 5 — Dry run (veilige preview)
+
+```bash
+bun run factuur-labeler.ts scan --dry-run --verbose
+```
+
+Zie precies wat er zou gebeuren — geen wijzigingen in Gmail, geen bestanden opgeslagen.
+
+## Stap 6 — Verwerken
 
 ```bash
 bun run factuur-labeler.ts scan
 ```
 
-All matching emails get the `factuur` label in Gmail.
+- Nieuwe factuur-emails krijgen label `factuur`
+- Emails van `trusted_domains` → PDF opgeslagen in kwartaalmap
+- Label gewisseld naar `Verwerkt`
 
-## Run again anytime
+## Nogmaals draaien
 
-The tool only labels emails that don't have the `factuur` label yet.
-Safe to re-run as often as you want.
+Emails met label `Verwerkt` worden altijd overgeslagen. Veilig om zo vaak te draaien als je wilt.
+
+---
+
+## Handige commando's
+
+```bash
+bun run factuur-labeler.ts status        # auth-status + labelinfo
+bun run factuur-labeler.ts scan --verbose # gedetailleerde output
+bun run factuur-labeler.ts config        # toon config-pad en inhoud
+```
+
+---
+
+## Mapstructuur output
+
+```
+output_base/
+├── 2026Q1/
+│   ├── 2026-01-15_apple.com_Uw_aankoop.pdf
+│   └── 2026-03-02_exact.nl_Factuur_maart.pdf
+└── 2026Q2/
+    └── 2026-04-20_google.com_Google_One.pdf
+```
