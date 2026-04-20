@@ -1,0 +1,12 @@
+// rename to config.json
+{
+  "output_base": "/pad/naar/Facturen_IN_folder",
+  "trusted_domains": [
+    "apple.com",
+    "google.com",
+    "microsoft.com",
+    "nn.nl",
+    "delta.nl",
+    "odido.nl"
+  ]
+}
